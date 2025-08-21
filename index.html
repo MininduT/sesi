@@ -140,7 +140,7 @@
           const glow = Math.sin(Date.now() / 300 + i) * 0.5 + 0.5;
 
           ctx.beginPath();
-          ctx.arc(px, py, 2, 0, Math.PI * 2);
+          ctx.arc(px, py, 1, 0, Math.PI * 2);
           ctx.fillStyle = `rgba(255, 255, 255, ${0.8 + glow * 0.2})`; // White with subtle glow
           ctx.shadowBlur = 10;
           ctx.shadowColor = `rgba(255, 255, 255, 0.5)`; // White glow
@@ -149,7 +149,7 @@
       });
 
       // Draw bottom text
-      ctx.font = '20px Arial'; // Small font size
+      ctx.font = '15px Arial'; // Small font size
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       const glow = Math.sin(Date.now() / 300) * 0.5 + 0.5;

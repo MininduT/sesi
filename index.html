@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Starry Night for Sesadhi</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      color: #fff;
+      font-family: 'Sacramento', cursive;
+    }
+
+    h1 {
+      font-size: 42px;
+      margin: 0;
+      color: #ff4fa1;
+      text-shadow: 0 0 8px #ff99cc;
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+  </style>
+</head>
+<body>
+  <h1>Sesadhi, You’re My Constellation 🌌💖</h1>
+  <canvas id="stars"></canvas>
+
+  <script>
+    const canvas = document.getElementById('stars');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    // Random stars for background
+    let stars = [];
+    for (let i = 0; i < 150; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        radius: Math.random() * 1.5,
+        alpha: Math.random(),
+        speed: Math.random() * 0.02 + 0.005
+      });
+    }
+
+    // Letter coordinates for "SESADHI" (each point = star)
+    const constellation = [
+      // S
+      {x: -280, y: -60}, {x: -260, y: -60}, {x: -280, y: -30}, {x: -260, y: -30}, {x: -280, y: 0}, {x: -260, y: 0},
+      // E
+      {x: -230, y: -60}, {x: -210, y: -60}, {x: -230, y: -30}, {x: -210, y: -30}, {x: -230, y: 0}, {x: -210, y: 0},
+      // S
+      {x: -180, y: -60}, {x: -160, y: -60}, {x: -180, y: -30}, {x: -160, y: -30}, {x: -180, y: 0}, {x: -160, y: 0},
+      // A
+      {x: -120, y: 0}, {x: -110, y: -30}, {x: -100, y: -60}, {x: -90, y: -30}, {x: -80, y: 0}, {x: -115, y: -20}, {x: -85, y: -20},
+      // D
+      {x: -50, y: 0}, {x: -50, y: -60}, {x: -30, y: -45}, {x: -30, y: -15}, {x: -50, y: 0},
+      // H
+      {x: 0, y: -60}, {x: 0, y: 0}, {x: 30, y: -60}, {x: 30, y: 0}, {x: 0, y: -30}, {x: 30, y: -30},
+      // I
+      {x: 60, y: -60}, {x: 60, y: 0}
+    ];
+
+    function drawStars() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Draw twinkling background stars
+      stars.forEach(star => {
+        star.alpha += star.speed * (Math.random() > 0.5 ? 1 : -1);
+        if (star.alpha < 0.1) star.alpha = 0.1;
+        if (star.alpha > 1) star.alpha = 1;
+
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${star.alpha})`;
+        ctx.fill();
+      });
+
+      // Draw Sesadhi constellation
+      const cx = canvas.width / 2;
+      const cy = canvas.height / 2;
+
+      ctx.beginPath();
+      ctx.strokeStyle = '#ff4fa1';
+      ctx.lineWidth = 1.5;
+
+      constellation.forEach((p, i) => {
+        const px = cx + p.x * 3;
+        const py = cy + p.y * 3;
+
+        ctx.beginPath();
+        ctx.arc(px, py, 3, 0, Math.PI * 2);
+        ctx.fillStyle = '#ffb6d9';
+        ctx.fill();
+        ctx.closePath();
+      });
+      ctx.stroke();
+
+      requestAnimationFrame(drawStars);
+    }
+
+    drawStars();
+  </script>
+</body>
+</html>

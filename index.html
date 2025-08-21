@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>You in Stars</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>I Love U</title>
   <style>
     body {
       margin: 0;
@@ -14,6 +15,8 @@
       position: absolute;
       top: 0;
       left: 0;
+      width: 100%;
+      height: 100%;
     }
   </style>
 </head>
@@ -28,7 +31,7 @@
 
     // --- Background stars ---
     let bgStars = [];
-    for (let i = 0; i < 700; i++) { // more background stars
+    for (let i = 0; i < 700; i++) {
       bgStars.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
@@ -52,21 +55,63 @@
     }
     createShootingStar();
 
-    // --- Letter shapes (more stars per letter) ---
+    // --- Letter shapes with more stars ---
     const letters = {
-      "S": [[0,0],[10,0],[0,10],[10,10],[0,20],[10,20],[5,5],[5,15]],
-      "E": [[0,0],[10,0],[0,10],[10,10],[0,20],[10,20],[5,5],[5,15]],
-      "A": [[5,0],[0,10],[10,10],[0,20],[10,20],[5,10],[5,15]],
-      "D": [[0,0],[0,20],[10,15],[10,5],[0,10],[5,5],[5,15]],
-      "H": [[0,0],[0,20],[10,0],[10,20],[0,10],[10,10],[5,5],[5,15]],
-      "I": [[5,0],[5,10],[5,20],[5,5],[5,15]]
+      "S": [
+        [0,0],[2,0],[8,0],[10,0], // Top bar
+        [0,2],[0,8],[0,10], // Left curve
+        [2,10],[8,10],[10,10], // Middle bar
+        [10,12],[10,18],[10,20], // Right curve
+        [0,20],[2,20],[8,20] // Bottom bar
+      ],
+      "E": [
+        [0,0],[2,0],[8,0],[10,0], // Top bar
+        [0,2],[0,8],[0,10], // Left vertical
+        [2,10],[8,10],[10,10], // Middle bar
+        [0,12],[0,18],[0,20], // Left vertical
+        [2,20],[8,20],[10,20] // Bottom bar
+      ],
+      "A": [
+        [5,0],[4,2],[6,2], // Top peak
+        [0,8],[0,10],[2,10], // Left leg
+        [8,10],[10,10],[10,8], // Right leg
+        [0,12],[0,18],[0,20], // Left leg
+        [10,12],[10,18],[10,20], // Right leg
+        [4,10],[6,10] // Crossbar
+      ],
+      "D": [
+        [0,0],[0,2],[0,8],[0,10], // Left vertical
+        [0,12],[0,18],[0,20], // Left vertical
+        [2,0],[8,0],[10,2], // Top curve
+        [10,8],[10,12], // Right curve
+        [8,20],[2,20], // Bottom curve
+        [5,5],[5,15] // Inner curve
+      ],
+      "H": [
+        [0,0],[0,2],[0,8],[0,10], // Left vertical
+        [0,12],[0,18],[0,20], // Left vertical
+        [10,0],[10,2],[10,8],[10,10], // Right vertical
+        [10,12],[10,18],[10,20], // Right vertical
+        [2,10],[8,10] // Crossbar
+      ],
+      "I": [
+        [2,0],[5,0],[8,0], // Top bar
+        [2,10],[5,10],[8,10], // Middle
+        [2,20],[5,20],[8,20], // Bottom bar
+        [5,2],[5,8],[5,12],[5,18] // Vertical
+      ]
     };
 
     const word = "SESADHI".split("");
     const letterPositions = word.map(() => ({
-      x: Math.random() * (canvas.width - 200) + 100,
-      y: Math.random() * (canvas.height - 200) + 100
+      x: Math.random() * (canvas.width - 300) + 150, // Wider spread
+      y: Math.random() * (canvas.height - 400) + 150 // Wider spread, avoid bottom text
     }));
+
+    // --- Bottom text: "Lots of love from Minindu" ---
+    const bottomText = "Lots of love from Minindu";
+    const bottomTextX = canvas.width / 2; // Centered
+    const bottomTextY = canvas.height - 50; // Near bottom
 
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -83,7 +128,7 @@
         ctx.fill();
       });
 
-      // Draw letters in stars
+      // Draw main word letters in stars
       word.forEach((letter, li) => {
         const shape = letters[letter];
         const pos = letterPositions[li];
@@ -96,13 +141,22 @@
 
           ctx.beginPath();
           ctx.arc(px, py, 4, 0, Math.PI * 2);
-          // less pinky, more star-like white with soft pink tint
-          ctx.fillStyle = `rgba(${255}, ${182-glow*40}, ${217-glow*60}, ${0.7 + glow * 0.3})`;
-          ctx.shadowBlur = 12;
-          ctx.shadowColor = `rgba(255,182,217,0.6)`; 
+          ctx.fillStyle = `rgba(255, 255, 255, ${0.8 + glow * 0.2})`; // White with subtle glow
+          ctx.shadowBlur = 10;
+          ctx.shadowColor = `rgba(255, 255, 255, 0.5)`; // White glow
           ctx.fill();
         });
       });
+
+      // Draw bottom text
+      ctx.font = '20px Arial'; // Small font size
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      const glow = Math.sin(Date.now() / 300) * 0.5 + 0.5;
+      ctx.fillStyle = `rgba(255, 255, 255, ${0.8 + glow * 0.2})`; // Match star color
+      ctx.shadowBlur = 6;
+      ctx.shadowColor = `rgba(255, 255, 255, 0.5)`; // Match star glow
+      ctx.fillText(bottomText, bottomTextX, bottomTextY);
 
       // Shooting stars
       for (let i = 0; i < shootingStars.length; i++) {
@@ -129,6 +183,28 @@
     window.addEventListener("resize", () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
+
+      // Recalculate background stars on resize
+      bgStars = [];
+      for (let i = 0; i < 700; i++) {
+        bgStars.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          radius: Math.random() * 1.5,
+          alpha: Math.random(),
+          speed: Math.random() * 0.02 + 0.005
+        });
+      }
+
+      // Recalculate main word letter positions
+      letterPositions.forEach(pos => {
+        pos.x = Math.random() * (canvas.width - 300) + 150; // Wider spread
+        pos.y = Math.random() * (canvas.height - 400) + 150; // Wider spread
+      });
+
+      // Update bottom text position
+      bottomTextX = canvas.width / 2;
+      bottomTextY = canvas.height - 50;
     });
   </script>
 </body>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Sesadhi in Stars</title>
+  <title>You in Stars</title>
   <style>
     body {
       margin: 0;
@@ -28,7 +28,7 @@
 
     // --- Background stars ---
     let bgStars = [];
-    for (let i = 0; i < 500; i++) {
+    for (let i = 0; i < 700; i++) { // more background stars
       bgStars.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
@@ -52,17 +52,16 @@
     }
     createShootingStar();
 
-    // --- Letter shapes (small constellations for each) ---
+    // --- Letter shapes (more stars per letter) ---
     const letters = {
-      "S": [[0,0],[20,0],[0,20],[20,20],[0,40],[20,40]],
-      "E": [[0,0],[20,0],[0,20],[20,20],[0,40],[20,40]],
-      "A": [[10,0],[0,20],[20,20],[0,40],[20,40],[10,20]],
-      "D": [[0,0],[0,40],[20,30],[20,10]],
-      "H": [[0,0],[0,40],[20,0],[20,40],[0,20],[20,20]],
-      "I": [[10,0],[10,20],[10,40]]
+      "S": [[0,0],[10,0],[0,10],[10,10],[0,20],[10,20],[5,5],[5,15]],
+      "E": [[0,0],[10,0],[0,10],[10,10],[0,20],[10,20],[5,5],[5,15]],
+      "A": [[5,0],[0,10],[10,10],[0,20],[10,20],[5,10],[5,15]],
+      "D": [[0,0],[0,20],[10,15],[10,5],[0,10],[5,5],[5,15]],
+      "H": [[0,0],[0,20],[10,0],[10,20],[0,10],[10,10],[5,5],[5,15]],
+      "I": [[5,0],[5,10],[5,20],[5,5],[5,15]]
     };
 
-    // Random placement for each letter in the sky
     const word = "SESADHI".split("");
     const letterPositions = word.map(() => ({
       x: Math.random() * (canvas.width - 200) + 100,
@@ -72,7 +71,7 @@
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Draw background twinkling stars
+      // Background stars
       bgStars.forEach(star => {
         star.alpha += star.speed * (Math.random() > 0.5 ? 1 : -1);
         if (star.alpha < 0.1) star.alpha = 0.1;
@@ -84,7 +83,7 @@
         ctx.fill();
       });
 
-      // Draw letters in pink stars
+      // Draw letters in stars
       word.forEach((letter, li) => {
         const shape = letters[letter];
         const pos = letterPositions[li];
@@ -97,14 +96,15 @@
 
           ctx.beginPath();
           ctx.arc(px, py, 4, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(255, 182, 217, ${0.7 + glow * 0.3})`; // pink glow
-          ctx.shadowBlur = 20;
-          ctx.shadowColor = "#ff5fa5";
+          // less pinky, more star-like white with soft pink tint
+          ctx.fillStyle = `rgba(${255}, ${182-glow*40}, ${217-glow*60}, ${0.7 + glow * 0.3})`;
+          ctx.shadowBlur = 12;
+          ctx.shadowColor = `rgba(255,182,217,0.6)`; 
           ctx.fill();
         });
       });
 
-      // Draw shooting stars
+      // Shooting stars
       for (let i = 0; i < shootingStars.length; i++) {
         let s = shootingStars[i];
         ctx.beginPath();
